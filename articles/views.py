@@ -22,7 +22,7 @@ def get_article(request, article_id):
 
 
 def create_post(request):
-    if request.user.is_anonymous:
+    if not request.user.is_anonymous:
         if request.method == "POST":
         # обработать данные формы, если метод POST
             form = {
@@ -68,9 +68,9 @@ def register_user(request):
 
                 if len(if_username_unique) == 0 and len(if_email_unique) == 0:
                     user = User.objects.create_user(form["username"], form["email"], form["password"])
-                    # form['errors'] = u"Вы зарегистрированы! Теперь войдите в систему"
-                    # return render(request, 'login.html', {'form': form})
-                    return redirect('login_user')
+                    form['errors'] = u"Вы зарегистрированы! Теперь войдите в систему"
+                    return render(request, 'login.html', {'form': form})
+                    # return redirect('login_user')
                 else:
                     form['errors'] = u"Не уникальный юзернейм/почта"
                     return render(request, 'register.html', {'form': form})
